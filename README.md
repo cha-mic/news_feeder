@@ -8,6 +8,7 @@
 
 - Python 3.7 以上
 - インターネット接続
+- uv
 
 ---
 
@@ -16,19 +17,20 @@
 ### 1. 依存ライブラリのインストール
 
 ```bash
-pip install feedparser
+uv add feedparser
+uv sync
 ```
 
 ### 2. スクリプトの配置
 
-`rss_reader.py` を任意のディレクトリに置いてください。出力ファイル（`tech_news.html`）はスクリプトと同じ場所に生成されます。
+`main.py` をsrc配下に置いてください。出力ファイル（`tech_news.html`）はoutput配下に生成されます。
 
 ---
 
 ## 実行方法
 
 ```bash
-python rss_reader.py
+uv run .\src\main.py
 ```
 
 実行すると以下の処理が順に行われます。
