@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tech News — 2026年04月30日 18:05</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0c0c0f;
+      --bg2: #111116;
+      --bg3: #17171f;
+      --border: rgba(255,255,255,0.07);
+      --text: #e8e8f0;
+      --muted: #6b6b80;
+      --sidebar-w: 220px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* ---- Sidebar ---- */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-height: 100vh;
+      background: var(--bg2);
+      border-right: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 2rem 0;
+      flex-shrink: 0;
+    }
+
+    .sidebar-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0 1.4rem 2rem;
+      color: var(--text);
+    }
+    .sidebar-logo span { display: block; font-size: 0.65rem; font-weight: 400; color: var(--muted); letter-spacing: 0.15em; margin-top: 2px; }
+
+    .nav-section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 1.4rem 0.6rem;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.55rem 1.4rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s, background 0.15s;
+      position: relative;
+    }
+    .nav-link:hover {
+      color: var(--text);
+      background: rgba(255,255,255,0.04);
+    }
+    .nav-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .nav-count { margin-left: auto; font-size: 0.7rem; background: rgba(255,255,255,0.08); border-radius: 10px; padding: 1px 7px; }
+
+    .sidebar-footer {
+      padding: 2rem 1.4rem 0;
+      font-size: 0.7rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ---- Main ---- */
+    .main {
+      flex: 1;
+      min-width: 0;
+      padding: 2.5rem 3rem;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+    }
+    .page-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.8rem;
+      letter-spacing: -0.02em;
+    }
+    .page-meta { font-size: 0.8rem; color: var(--muted); }
+    .page-total { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+
+    /* ---- Feed section ---- */
+    .feed-section { margin-bottom: 3.5rem; }
+
+    .feed-header {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      margin-bottom: 1.2rem;
+    }
+    .feed-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .feed-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.03em;
+    }
+    .feed-badge {
+      font-size: 0.7rem;
+      background: rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 2px 8px;
+      color: var(--muted);
+    }
+
+    /* ---- Cards ---- */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .card {
+      background: var(--bg3);
+      padding: 1.2rem 1.4rem;
+      transition: background 0.15s;
+      animation: fadeUp 0.4s ease both;
+    }
+    .card:hover { background: #1e1e28; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .card-meta { font-size: 0.68rem; color: var(--muted); margin-bottom: 0.5rem; }
+
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 600;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      margin-bottom: 0.5rem;
+    }
+    .card-title a {
+      color: var(--text);
+      text-decoration: none;
+    }
+    .card-title a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+    .card-summary {
+      font-size: 0.78rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .empty-msg { color: var(--muted); font-size: 0.85rem; padding: 1rem 0; }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+
+    @media (max-width: 700px) {
+      .sidebar { display: none; }
+      .main { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="sidebar">
+    <div class="sidebar-logo">Tech News<span>RSS Reader</span></div>
+    <div class="nav-section-label">フィード</div>
+    
+        <a href="#GIGAZINE" class="nav-link" style="--accent: #ff6600">
+          <span class="nav-dot" style="background:#ff6600"></span>
+          GIGAZINE
+          <span class="nav-count">10</span>
+        </a>
+        <a href="#ITmedia" class="nav-link" style="--accent: #c00">
+          <span class="nav-dot" style="background:#c00"></span>
+          ITmedia
+          <span class="nav-count">10</span>
+        </a>
+        <a href="#日経クロステック" class="nav-link" style="--accent: #003580">
+          <span class="nav-dot" style="background:#003580"></span>
+          日経クロステック
+          <span class="nav-count">10</span>
+        </a>
+        <a href="#Zenn_トレンド" class="nav-link" style="--accent: #3ea8ff">
+          <span class="nav-dot" style="background:#3ea8ff"></span>
+          Zenn トレンド
+          <span class="nav-count">10</span>
+        </a>
+        <a href="#Qiita_人気記事" class="nav-link" style="--accent: #55c500">
+          <span class="nav-dot" style="background:#55c500"></span>
+          Qiita 人気記事
+          <span class="nav-count">10</span>
+        </a>
+        <a href="#はてブ_IT" class="nav-link" style="--accent: #00a4de">
+          <span class="nav-dot" style="background:#00a4de"></span>
+          はてブ IT
+          <span class="nav-count">10</span>
+        </a>
+        <a href="#Gizmodo_Japan" class="nav-link" style="--accent: #e5185b">
+          <span class="nav-dot" style="background:#e5185b"></span>
+          Gizmodo Japan
+          <span class="nav-count">10</span>
+        </a>
+        <a href="#WIRED_Japan" class="nav-link" style="--accent: #111">
+          <span class="nav-dot" style="background:#111"></span>
+          WIRED Japan
+          <span class="nav-count">0</span>
+        </a>
+    <div class="sidebar-footer">
+      更新: 2026年04月30日 18:05<br>
+      合計 70 件の記事
+    </div>
+  </nav>
+
+  <main class="main">
+    <div class="page-header">
+      <div>
+        <div class="page-title">Tech News</div>
+        <div class="page-meta">取得日時: 2026年04月30日 18:05</div>
+      </div>
+      <div class="page-total">合計 70 件</div>
+    </div>
+
+    
+        <section class="feed-section" id="GIGAZINE">
+          <div class="feed-header" style="--accent: #ff6600">
+            <div class="feed-dot" style="background:#ff6600"></div>
+            <h2>GIGAZINE</h2>
+            <span class="feed-badge">10件</span>
+          </div>
+          <div class="cards-grid">
+            
+          <article class="card" style="animation-delay:0.0s">
+            <div class="card-meta">2026-04-30 08:25</div>
+            <h3 class="card-title">
+              <a href="https://gigazine.net/news/20260430-youtube-tv-custom-multiview/" target="_blank" rel="noopener">YouTube TVに1画面で4番組同時視聴などのカスタムが可能なマルチビュー機能正式導入</a>
+            </h3>
+            <p class='card-summary'>YouTubeが、TV番組ストリーミングサービスのYouTube TVに特に多く寄せられる要望だったという、チャンネルを切り替えることなく1つの画面で最大4番組の視聴が可能なマルチビュー機能を正式に導入することを発表しました。続きを読む...</p>
+          </article>
+          <article class="card" style="animation-delay:0.04s">
+            <div class="card-meta">2026-04-30 00:00</div>
+            <h3 class="card-title">
+              <a href="https://gigazine.net/news/20260430-switchbot-aihub-openclaw/" target="_blank" rel="noopener">すぐにAIスマートホームを自宅で実現できる「SwitchBot AIハブ」を使ってみた、家電＋AIをいろいろ構築できてなんとあのOpenClaw環境もボタンを押すだけでサクッと完了</a>
+            </h3>
+            <p class='card-summary'>「SwitchBot AIハブ」はカメラやセンサーなどの各種スマートホームデバイスを連携させて自動化を実現するための中枢デバイスで、視覚言語モデル(VLM)を用いてカメラに映った映像を分析し、「ペットがエサを食べたら通知する」といったように「出来事そのもの」をトリガーに各種デバイスを自動実行できます。そんなSwitchBot AIハブがAIエージェントシステムのOpenClawに対応し、自然言語で...</p>
+          </article>
+          <article class="card" style="animation-delay:0.08s">
+            <div class="card-meta">2026-04-30 08:36</div>
+            <h3 class="card-title">
+              <a href="https://gigazine.net/news/20260430-openai-revenue-user-target/" target="_blank" rel="noopener">「OpenAIは新規ユーザー数と売上高に関する目標を達成できなかった」との指摘をOpenAIが「典型的な釣り記事」と一蹴</a>
+            </h3>
+            <p class='card-summary'>経済紙のウォール・ストリート・ジャーナル(WSJ)が「OpenAIは新規ユーザー数と売上高について目標を達成できなかった」と報じたところ、OpenAI側が「社内の雰囲気は信じられないほど前向き」であり当該記事を「典型的な釣り記事」と一蹴する事態になっています。続きを読む...</p>
+          </article>
+          <article class="card" style="animation-delay:0.12s">
+            <div class="card-meta">2026-04-30 08:00</div>
+            <h3 class="card-title">
+              <a href="https://gigazine.net/news/20260430-calpis-lemon-lassi/" target="_blank" rel="noopener">カルピスの濃さがさらに増した甘々酸っぱい味わいが楽しめる「ひと搾りレモンのラッシー＆カルピス」試飲レビュー</a>
+            </h3>
+            <p class='card-summary'>レモン果汁を加えたラッシーと「カルピス」を組み合わせた乳性飲料「ひと搾りレモンのラッシー＆カルピス」が2026年4月21日に登場しました。コンビニで見かけたので買って飲んでみました。続きを読む...</p>
+          </article>
+          <article class="card" style="animation-delay:0.16s">
+            <div class="card-meta">2026-04-30 07:11</div>
+            <h3 class="card-title">
+              <a href="https://gigazine.net/news/20260430-mistral-medium-3-5/" target="_blank" rel="noopener">Claude Sonnet 4.5超えのフランス製AIモデル「Mistral Medium 3.5」がオープンモデルとして公開される＆Mistral Vibeがクラウド対応</a>
+            </h3>
+            <p class='card-summary'>フランスのAI企業であるMistral AIがパラメーター数1280億のAIモデル「Mistral Medium 3.5」をオープンモデルとして公開しました。合わせてコーディングエージェントのMistral Vibeがクラウドで動作するようになり、複数のエージェントを同時実行したりチャットAIのLe Chatからタスクを開始できるようになりました。続きを読む...</p>
+          </article>
+          <article class="card" style="animation-delay:0.2s">
+            <div class="card-meta">2026-04-30 07:00</div>
+            <h3 class="card-title">
+              <a href="https://gigazine.net/news/20260430-openai-ban-codex-ai-goblins-gremlins/" target="_blank" rel="noopener">OpenAIは「ゴブリンやアライグマについて話すな」とAIコーディングツールのCodexに指示している</a>
+            </h3>
+            <p class='card-summary'>CodexはOpenAIが開発したAIコーディングツールであり、2026年4月にリリースされたGPT-5.5もCodexに統合されています。新たに、OpenAIがCodexに対して与えたプロンプトの中に「ゴブリン・グレムリン・アライグマ・トロール・オーガ・ハト・その他の動物やクリーチャーについて話すな」というものが含まれていることがわかりました。続きを読む...</p>
+          </article>
+          <article class="card" style="animation-delay:0.24s">
+            <div class="card-meta">2026-04-30 06:35</div>
+            <h3 class="card-title">
+              <a href="https://gigazine.net/news/20260430-gemini-generate-files/" target="_blank" rel="noopener">GeminiがPDF・Word・Excelなどを出力可能に</a>
+            </h3>
+            <p class='card-summary'>GoogleのAI・GeminiがPDF、Microsoft Word、Excel、Googleドキュメント、スプレッドシート、スライドなどに対応したファイルを直接作成できるようになりました。世界中のすべてのGeminiアプリユーザーがチャット上で利用できます。続きを読む...</p>
+          </article>
+          <article class="card" style="animation-delay:0.28s">
+            <div class="card-meta">2026-04-30 06:10</div>
+            <h3 class="card-title">
+              <a href="https://gigazine.net/news/20260430-nvidia-ai-nemotron-3-nano-omni/" target="_blank" rel="noopener">NVIDIAが視覚・音声・言語モデルを統合するオープンなオムニモーダル推論モデル「Nemotron 3 Nano Omni」を発表</a>
+            </h3>
+            <p class='card-summary'>現地時間の2026年4月28日、NVIDIAが視覚・音声・言語モデルを統合したオムニモーダル推論モデルの「Nemotron 3 Nano Omni」を発表しました。コンピューターの使用、文書の分析、音声や映像の推論といったエージェント型ワークフローを支える最高の効率性と精度を実現しています。続きを読む...</p>
+          </article>
+          <article class="card" style="animation-delay:0.32s">
+            <div class="card-meta">2026-04-30 06:00</div>
+            <h3 class="card-title">
+              <a href="https://gigazine.net/news/20260430-zap-energy/" target="_blank" rel="noopener">核融合発電スタートアップが高い電力需要を受けて「核分裂発電(原子力発電)」の副業を開始</a>
+            </h3>
+            <p class='card-summary'>核融合発電技術の開発は難航しており、物理学者や技術者たちが数十年以上核融合発電の実現に向けて取り組んできましたが、まだ実用化のめどは立っていません。そうした状況の中、これまでに3億ドル(約480億円)を調達している核融合発電スタートアップのZap Energyが「前例のない規模の電力需要がある」ことを理由に、既存の原子力発電と同じ核分裂反応を利用する小型・モジュール式の先進原子炉事業に参入すること...</p>
+          </article>
+          <article class="card" style="animation-delay:0.36s">
+            <div class="card-meta">2026-04-30 05:15</div>
+            <h3 class="card-title">
+              <a href="https://gigazine.net/news/20260430-motorola-8-model/" target="_blank" rel="noopener">モトローラが「razr」「edge」「g」スマートフォンシリーズの計8機種を発表</a>
+            </h3>
+            <p class='card-summary'>レノボ傘下のモトローラが、折りたたみ式スマートフォンの「razr」シリーズ、ミドルクラス～ミドルハイクラスの「edge」シリーズ、低価格帯の「g」シリーズに属するスマートフォン計8機種を発表しました。続きを読む...</p>
+          </article>
+          </div>
+        </section>
+        <section class="feed-section" id="ITmedia">
+          <div class="feed-header" style="--accent: #c00">
+            <div class="feed-dot" style="background:#c00"></div>
+            <h2>ITmedia</h2>
+            <span class="feed-badge">10件</span>
+          </div>
+          <div class="cards-grid">
+            
+          <article class="card" style="animation-delay:0.0s">
+            <div class="card-meta">2026-04-30 08:03</div>
+            <h3 class="card-title">
+              <a href="https://www.itmedia.co.jp/news/articles/2604/30/news111.html" target="_blank" rel="noopener">[ITmedia News] 「BeReal」による不適切投稿、教育現場でも　20代女性教諭「深く考えず投稿した」</a>
+            </h3>
+            <p class='card-summary'>仙台市教育委員会は、太白区内の市立小学校に勤める教員の一人が、不適切なSNS投稿を行っていたと公表した。</p>
+          </article>
+          <article class="card" style="animation-delay:0.04s">
+            <div class="card-meta">2026-04-30 08:00</div>
+            <h3 class="card-title">
+              <a href="https://www.itmedia.co.jp/news/articles/2604/30/news114.html" target="_blank" rel="noopener">[ITmedia News] テスラ自動運転「26年中に日本解禁」の現実味──日産・NVIDIAも参戦、一番乗りはどこか</a>
+            </h3>
+            <p class='card-summary'>オランダで認可、26年中の日本実装も宣言したテスラのFSD Supervised。だが立ちはだかるのは経産省の「E2Eブラックボックス」問題だ。日産＋Wayve、NVIDIA Alpamayoも参戦する市街地ADASの陣取り合戦。技術論を超えた政治判断まで絡む日本市場で、最初に解禁されるのはどのシステムか。</p>
+          </article>
+          <article class="card" style="animation-delay:0.08s">
+            <div class="card-meta">2026-04-30 07:26</div>
+            <h3 class="card-title">
+              <a href="https://www.itmedia.co.jp/mobile/articles/2604/30/news110.html" target="_blank" rel="noopener">[ITmedia Mobile] 「ZERO HALLIBURTON」のiPhone 17e用ケース発売　背面型／手帳型の2モデル</a>
+            </h3>
+            <p class='card-summary'>スマホアクセサリーブランド「UNICASE」は、iPhone 17e対応「ZERO HALLIBURTON」コラボケースを発売。マットシルバーのボディにダブルリブデザインを採用し、片手で操作しやすい背面型とカード収納付きの手帳型の2タイプを用意する。</p>
+          </article>
+          <article class="card" style="animation-delay:0.12s">
+            <div class="card-meta">2026-04-30 07:12</div>
+            <h3 class="card-title">
+              <a href="https://www.itmedia.co.jp/news/articles/2604/30/news108.html" target="_blank" rel="noopener">[ITmedia News] “BeReal漏えい問題”で西日本シティ銀のサイトつながりにくく　ネットバンクは親会社サイト経由で利用を</a>
+            </h3>
+            
+          </article>
+          <article class="card" style="animation-delay:0.16s">
+            <div class="card-meta">2026-04-30 07:05</div>
+            <h3 class="card-title">
+              <a href="https://www.itmedia.co.jp/mobile/articles/2604/30/news107.html" target="_blank" rel="noopener">[ITmedia Mobile] モトローラが「razr 70」シリーズ3機種を発表　「ultra」は7型ディスプレイや次世代のLOFICセンサーカメラを搭載</a>
+            </h3>
+            <p class='card-summary'>モトローラは、折りたたみスマートフォンの最新ラインアップとして「motorola razr ultra」など計3機種を発表した。新機種は高度なAI機能や高性能なカメラシステムを備え、洗練されたデザインと耐久性を両立している。2026年5月21日から米国を皮切りに順次発売し、ユーザーの利便性を高める。</p>
+          </article>
+          <article class="card" style="animation-delay:0.2s">
+            <div class="card-meta">2026-04-30 06:40</div>
+            <h3 class="card-title">
+              <a href="https://www.itmedia.co.jp/news/articles/2604/30/news102.html" target="_blank" rel="noopener">[ITmedia News] 「高熱のときに見る夢」　マスク氏やザッカーバーグ氏の“顔”が4足で歩く、不気味なロボット犬がSNSで話題</a>
+            </h3>
+            <p class='card-summary'>テック界の大物達の顔と犬の体とを組み合わせた「ロボット犬」の存在が、XなどのSNSを中心に話題となっている。</p>
+          </article>
+          <article class="card" style="animation-delay:0.24s">
+            <div class="card-meta">2026-04-30 06:35</div>
+            <h3 class="card-title">
+              <a href="https://www.itmedia.co.jp/pcuser/articles/2604/30/news099.html" target="_blank" rel="noopener">[ITmedia PC USER] エイサー、Ryzen AI 400シリーズ初採用のCopilot+ PC「Aspire 14 AI」2モデルを発売</a>
+            </h3>
+            <p class='card-summary'>日本エイサーが、AMD Ryzen AI 400シリーズを搭載した「Aspire 14 AI」シリーズを発表し、国内で4月30日に発売した。ともに50TOPSのNPUを搭載している。長時間利用が可能な内蔵バッテリーと約1.27kgの重さで、モバイル用途にも向いている。</p>
+          </article>
+          <article class="card" style="animation-delay:0.28s">
+            <div class="card-meta">2026-04-30 06:30</div>
+            <h3 class="card-title">
+              <a href="https://www.itmedia.co.jp/enterprise/articles/2604/29/news034.html" target="_blank" rel="noopener">[ITmedia エンタープライズ] AI時代のSIerの「勝ち筋」とは？　富士ソフトが新体制を始動</a>
+            </h3>
+            <p class='card-summary'>「人月商売」からの脱却を図るSIerが増えている。富士ソフトもまた、2026年4月から新体制を始動した。生成AI時代に問われるSIerの「勝ち筋」が問われる中、同社が新体制で挑戦する、新たなビジネスモデルとは。</p>
+          </article>
+          <article class="card" style="animation-delay:0.32s">
+            <div class="card-meta">2026-04-30 06:30</div>
+            <h3 class="card-title">
+              <a href="https://www.itmedia.co.jp/enterprise/articles/2604/30/news089.html" target="_blank" rel="noopener">[ITmedia エンタープライズ] ヒューマノイドロボット出荷台数が前年比648％増　中国が約8割</a>
+            </h3>
+            <p class='card-summary'>矢野経済研究所によると、世界ヒューマノイドロボット市場は2025～35年にCAGR83.5％で成長し、2035年の出荷台数は約718万台に達する見通しだ。AI・ロボティクス技術の進展と各国の政策支援が市場拡大を後押しする。</p>
+          </article>
+          <article class="card" style="animation-delay:0.36s">
+            <div class="card-meta">2026-04-30 06:00</div>
+            <h3 class="card-title">
+              <a href="https://www.itmedia.co.jp/business/articles/2604/30/news092.html" target="_blank" rel="noopener">[ITmedia ビジネスオンライン] NEC社長「AI投資に数百億円」　最高益・利益率2桁突入の先に描く展望とは？</a>
+            </h3>
+            <p class='card-summary'>NECの森田隆之社長兼CEOは、4月28日の決算説明会で「2026年は大きな節目」になると語った。AI投資などを加速させるという。その中身とは。</p>
+          </article>
+          </div>
+        </section>
+        <section class="feed-section" id="日経クロステック">
+          <div class="feed-header" style="--accent: #003580">
+            <div class="feed-dot" style="background:#003580"></div>
+            <h2>日経クロステック</h2>
+            <span class="feed-badge">10件</span>
+          </div>
+          <div class="cards-grid">
+            
+          <article class="card" style="animation-delay:0.0s">
+            <div class="card-meta">2026-04-29 22:06</div>
+            <h3 class="card-title">
+              <a href="https://xtech.nikkei.com/atcl/nxt/mag/nc/18/020800017/042101423/" target="_blank" rel="noopener">「Claude Mythos」の衝撃　数千の脆弱性を発見、攻撃コードも生成</a>
+            </h3>
+            <p class='card-summary'>米アンソロピックが2026年4月7日に発表した新しい汎用の大規模言語モデル（LLM）「Claude Mythos（クロード・ミュトス）」のプレビュー版を巡り、これまでのセキュリティーの常識が覆される可能性があるとして波紋が広がっている。</p>
+          </article>
+          <article class="card" style="animation-delay:0.04s">
+            <div class="card-meta">2026-04-29 22:05</div>
+            <h3 class="card-title">
+              <a href="https://xtech.nikkei.com/atcl/nxt/mag/nc/18/020800017/042201429/" target="_blank" rel="noopener">Mythosに「対応せざるを得ない」　身構える日本の金融業界</a>
+            </h3>
+            <p class='card-summary'>米アンソロピックの新たな大規模言語モデル（LLM）「Claude Mythos （クロード・ミュトス）」に日本の金融業界が身構えている。金融機関はITベンダーの多重下請け構造に頼ったシステム開発体制を敷く。高性能なAI（人工知能）を悪用した攻撃が、そうした開発体制に対して不利に働く可能性がある。</p>
+          </article>
+          <article class="card" style="animation-delay:0.08s">
+            <div class="card-meta">2026-04-29 22:04</div>
+            <h3 class="card-title">
+              <a href="https://xtech.nikkei.com/atcl/nxt/mag/nc/18/020800017/042201425/" target="_blank" rel="noopener">行政データを認定制で民間に開放　デジタル庁が法改正案</a>
+            </h3>
+            <p class='card-summary'>政府は行政機関が持つデータを民間企業などが利用しやすくする仕組みを整備する。企業などからの申請に応じ、用途を認定して提供するための法改正案を特別国会へ提出した。自動運転やAI（人工知能）開発など、企業が幅広いビジネスに利用することを想定する。</p>
+          </article>
+          <article class="card" style="animation-delay:0.12s">
+            <div class="card-meta">2026-04-29 22:03</div>
+            <h3 class="card-title">
+              <a href="https://xtech.nikkei.com/atcl/nxt/mag/nc/18/020800017/042201424/" target="_blank" rel="noopener">日本郵船などが洋上DCの実証実験　陸上の「3つの不足」に活路</a>
+            </h3>
+            <p class='card-summary'>日本郵船とNTTファシリティーズ、ユーラスエナジーホールディングス、三菱UFJ銀行、横浜市の5者は洋上データセンターの実証実験を開始した。洋上データセンターは横浜港の大さん橋ふ頭に既設のミニフロート（浮体式係留施設）上に構築し、2026年3月25日に開所式を開催した。2027年の商用化を目指す。</p>
+          </article>
+          <article class="card" style="animation-delay:0.16s">
+            <div class="card-meta">2026-04-29 22:02</div>
+            <h3 class="card-title">
+              <a href="https://xtech.nikkei.com/atcl/nxt/mag/nc/18/020800017/042201426/" target="_blank" rel="noopener">米アンソロピックが「Cowork」提供　Mythos発表に続くAIエージェント</a>
+            </h3>
+            <p class='card-summary'>米アンソロピックは2026年4月9日、パソコンでの作業を自動化するAIエージェント「Claude Cowork」の一般提供を開始した。提供対象はC l a u d e の有料プランの利用者。Claudeのデスクトップ版アプリのエージェント機能に相当する。</p>
+          </article>
+          <article class="card" style="animation-delay:0.2s">
+            <div class="card-meta">2026-04-29 22:01</div>
+            <h3 class="card-title">
+              <a href="https://xtech.nikkei.com/atcl/nxt/mag/nc/18/020800017/042201428/" target="_blank" rel="noopener">「Devin」開発元が日本法人設立　販売・サポートを拡充、技術者採用も</a>
+            </h3>
+            <p class='card-summary'>ソフトウエア開発向けAI（人工知能）エージェント「Devin」を開発する米コグニションAIは2026年4月9日、日本法人を設立したと発表した。日本での販売やサポート体制を拡充し、日本企業の利用拡大を目指す。</p>
+          </article>
+          <article class="card" style="animation-delay:0.24s">
+            <div class="card-meta">2026-04-29 22:00</div>
+            <h3 class="card-title">
+              <a href="https://xtech.nikkei.com/atcl/nxt/mag/nnw/18/041700244/041700001/" target="_blank" rel="noopener">認証の転換点</a>
+            </h3>
+            <p class='card-summary'>Apple（アップル）、Google（グーグル）、Microsoft（マイクロソフト）といった米大手プラットフォームの認証基盤や金融機関のWebサービスを中心に、新たな認証方式である「パスキー」の導入が進む。一方でパスキー未対応のサービスも多く、各社は追加の認証を組み合わせて利用者保護を図る。</p>
+          </article>
+          <article class="card" style="animation-delay:0.28s">
+            <div class="card-meta">2026-04-29 22:00</div>
+            <h3 class="card-title">
+              <a href="https://xtech.nikkei.com/atcl/nxt/mag/nnw/18/041800012/041700323/" target="_blank" rel="noopener">NaaSで攻勢狙うドコモビジネス</a>
+            </h3>
+            <p class='card-summary'>NTTドコモビジネス（旧NTTコミュニケーションズ）がNaaSで巻き返しを狙っている。NaaSとは、Software Defined（ソフトウエア定義）技術を活用し、クラウドと同様、必要な機能を使った分だけ支払うような体系を取り入れたネットワークサービスを指す。</p>
+          </article>
+          <article class="card" style="animation-delay:0.32s">
+            <div class="card-meta">2026-04-29 22:00</div>
+            <h3 class="card-title">
+              <a href="https://xtech.nikkei.com/atcl/nxt/mag/nnw/18/041600215/041600013/" target="_blank" rel="noopener">拡張性の高い光伝送装置を開発　米国出張で得た技術を仕様策定に生かす</a>
+            </h3>
+            <p class='card-summary'>通信キャリアが主に使う、電気信号を光信号に変換する「光伝送装置」に関わる仕事をしています。主には、設計や開発、顧客向けの機器選定や検証といった業務です。日々、機器の回路を設計したり、社内の検証環境で機器をテストして顧客に納品したりしています。</p>
+          </article>
+          <article class="card" style="animation-delay:0.36s">
+            <div class="card-meta">2026-04-29 22:00</div>
+            <h3 class="card-title">
+              <a href="https://xtech.nikkei.com/atcl/nxt/mag/nc/18/020800017/042201427/" target="_blank" rel="noopener">フォーティネット、SSL-VPNを見直し　トンネルモードの技術サポート1年延長</a>
+            </h3>
+            <p class='card-summary'>米フォーティネットは2026年3月27日（米国時間）、セキュリティー製品用OS「FortiOS（フォーティオーエス）」で提供する「SSL-VPN」の技術サポートの終了（EoES：エンド・オブ・エンジニアリング・サポート）を1年延長することを明らかにした。</p>
+          </article>
+          </div>
+        </section>
+        <section class="feed-section" id="Zenn_トレンド">
+          <div class="feed-header" style="--accent: #3ea8ff">
+            <div class="feed-dot" style="background:#3ea8ff"></div>
+            <h2>Zenn トレンド</h2>
+            <span class="feed-badge">10件</span>
+          </div>
+          <div class="cards-grid">
+            
+          <article class="card" style="animation-delay:0.0s">
+            <div class="card-meta">2026-04-29 10:02</div>
+            <h3 class="card-title">
+              <a href="https://zenn.dev/tasuku/articles/73bf8c7274208f" target="_blank" rel="noopener">1m精度の標高データを使って、全国の前方後円墳を探してみた</a>
+            </h3>
+            <p class='card-summary'>はじめに
+国土地理院の高精度標高データ DEM1A を使って、日本全国の地形から 前方後円墳 を機械学習で探しました。
+やったことを要約すると、次のようになります。
+
+DEM1A の GML から、z=10〜16 の WebP 標高タイル約146万枚、約250GB を自前生成
+そのうち機械学習で利用するズームレベル(z=16)のタイルは 1,070,504枚 / 171GB
+
+DEM から mul...</p>
+          </article>
+          <article class="card" style="animation-delay:0.04s">
+            <div class="card-meta">2026-04-29 06:30</div>
+            <h3 class="card-title">
+              <a href="https://zenn.dev/wakame_atsushi/articles/e9b754160d1469" target="_blank" rel="noopener">&quot;array[i++] = null; は本当に GC を促進するのか — Node.js で実測して確かめる</a>
+            </h3>
+            <p class='card-summary'>はじめに
+きっかけは React の内部ソースを読んでいて、こんなコードに出会ったことでした。
+// packages/react-reconciler/src/ReactFiberConcurrentUpdates.js（L65-L72, 一部抜粋 / 日本語コメントは筆者）
+while (i &amp;lt; endIndex) {
+  const fiber: Fiber = concurrentQ...</p>
+          </article>
+          <article class="card" style="animation-delay:0.08s">
+            <div class="card-meta">2026-04-29 05:45</div>
+            <h3 class="card-title">
+              <a href="https://zenn.dev/unhappychoice/articles/splashboard-introduction" target="_blank" rel="noopener">シェル起動時と cd のたびにダッシュボードを描く CLI「splashboard」を作りました</a>
+            </h3>
+            <p class='card-summary'>はじめに
+ブラウザで GitHub のレポジトリページを開くと、 README 、 commit 履歴、 Issue / PR 一覧、 contribution heatmap などがトップにまとまっていて、いま何が起きているかがぱっと見でわかります。
+一方、ターミナルを開いたときに見えるのはプロンプト 1 行くらいで、出てくる情報量はかなり少なめです。
+ターミナルでも Web / GitHub ...</p>
+          </article>
+          <article class="card" style="animation-delay:0.12s">
+            <div class="card-meta">2026-04-29 03:23</div>
+            <h3 class="card-title">
+              <a href="https://zenn.dev/sc30gsw/articles/a39bd748caa861" target="_blank" rel="noopener">UIの面倒、実はDBの問題だった ― Local-First と Instant が示す Web 開発の未来</a>
+            </h3>
+            <p class='card-summary'>はじめに
+2026 年 4 月、開発開始から 4 年を経て Instant が v1.0 をリリースしました。
+https://x.com/stopachka/status/2042307808541188148
+アナウンスでは、次の 3 つが改めて押し出されています。
+
+
+Unlimited apps（多テナント Postgres なのでフリープランが止まらない）
+
+A sync engine ...</p>
+          </article>
+          <article class="card" style="animation-delay:0.16s">
+            <div class="card-meta">2026-04-28 10:14</div>
+            <h3 class="card-title">
+              <a href="https://zenn.dev/ashunar0/articles/cc351badf8681c" target="_blank" rel="noopener">Hono公式の Inertia アダプタが来た！Hono × Inertia × React によるSPA新体験</a>
+            </h3>
+            <p class='card-summary'>はじめに
+本日、Hono の作者 yusukebe さん から @hono/inertia が正式リリースされた。
+https://x.com/yusukebe/status/2049020835516854392
+前回、サンプルアプリの中身を除いて、Hono と Inertia.js の型貫通体験の仕組みを明らかにしたところで、今回は実際に簡単あアプリを作って、その触り心地を確かめてみる。
+前回...</p>
+          </article>
+          <article class="card" style="animation-delay:0.2s">
+            <div class="card-meta">2026-04-28 09:23</div>
+            <h3 class="card-title">
+              <a href="https://zenn.dev/layerx/articles/20260428-ccgate" target="_blank" rel="noopener">97%のPermission確認を自動化するCoding Agent用OSS「ccgate」が誕生した</a>
+            </h3>
+            <p class='card-summary'>!
+
+Claude / CodexのPermission確認をLLMに代行させるccgateというCLIを作った
+もとはAuto Mode的な体験を目指して作り、Auto Modeが使えるようになった今もPlan mode中の確認やCodexへの展開、ログ・metricsの可視化のために使い続けている
+自分の環境では1ヶ月約2000件のPermission確認のうち、基本的に97%近くが自動化され...</p>
+          </article>
+          <article class="card" style="animation-delay:0.24s">
+            <div class="card-meta">2026-04-28 08:45</div>
+            <h3 class="card-title">
+              <a href="https://zenn.dev/headwaters/articles/509a1f83c693ce" target="_blank" rel="noopener">エージェントコスト対策としてローカルLLMはアリ？— Ollamaで試してみた</a>
+            </h3>
+            <p class='card-summary'>はじめに
+AIエージェントが発達した昨今、頭の中で想像したものを実際にアプリとして落とし込むことは障壁がかなり低くなったと思います。
+しかし、一方でこの先エージェント自体を今までのように安易に利用することが難しくなってくるかもしれません。
+GitHub Copilotが2026年6月1日より従量課金制へ移行すると発表しました。
+これまでの「プレミアムリクエスト」方式が廃止され、「GitHub AI...</p>
+          </article>
+          <article class="card" style="animation-delay:0.28s">
+            <div class="card-meta">2026-04-28 07:56</div>
+            <h3 class="card-title">
+              <a href="https://zenn.dev/hi/articles/64f106cd145fa8" target="_blank" rel="noopener">LM Studioで国産OSS大規模言語モデルLLM-jp4を使う</a>
+            </h3>
+            <p class='card-summary'>最近、ニュースを見ていると、国産LLMを国立情報学研究所(NII)が作り、LLM-jpという名でOSSにしていることを知りました。
+https://news.yahoo.co.jp/articles/c16cc0376df950cfe7ab9b3e43eacd5fab4ecf7c
+そういうのが欲しかった。ということで、ローカルLLMを使いやすくしてくれるソフト LM Studio から早速使ってみ...</p>
+          </article>
+          <article class="card" style="animation-delay:0.32s">
+            <div class="card-meta">2026-04-28 04:37</div>
+            <h3 class="card-title">
+              <a href="https://zenn.dev/tokium_dev/articles/ca6f30192f6379" target="_blank" rel="noopener">Claude Code に仕事を譲った日——残ったのは「判断」と「責任」だった</a>
+            </h3>
+            <p class='card-summary'>はじめに
+私はもともとIS（インサイドセールス）、いわゆる営業サイドの人間だった。
+コードは書けない。SQLも知らない。ターミナルを開いたこともなかった。そんな自分が、ある日開発部のCRE（Customer Reliability Engineering）チームに異動した。
+CREの仕事は、お客様からの技術的な問い合わせを調査して回答すること。「承認フローが変わってしまった」「エクスポートが終わら...</p>
+          </article>
+          <article class="card" style="animation-delay:0.36s">
+            <div class="card-meta">2026-04-28 04:34</div>
+            <h3 class="card-title">
+              <a href="https://zenn.dev/toki_mwc/articles/copilot-pro-token-billing-gpt54" target="_blank" rel="noopener">Copilot Pro は月300回制限からトークン課金へ—GPT-5.4 × Copilot CLI の実コストを試算した</a>
+            </h3>
+            <p class='card-summary'>2026年4月時点の情報です。GitHub 公式ブログおよびドキュメント（2026-04-27 付）をもとに執筆しています。
+GitHub から「6月1日より Copilot を従量課金に移行する」という通知が届いた。
+Copilot Pro の月 300 回制限（PRU）でやりくりしていた身としては、よい変更かどうか気になる。公式の料金表から GPT-5.4 の単価を拾い、実際のワークフローで試...</p>
+          </article>
+          </div>
+        </section>
+        <section class="feed-section" id="Qiita_人気記事">
+          <div class="feed-header" style="--accent: #55c500">
+            <div class="feed-dot" style="background:#55c500"></div>
+            <h2>Qiita 人気記事</h2>
+            <span class="feed-badge">10件</span>
+          </div>
+          <div class="cards-grid">
+            
+          <article class="card" style="animation-delay:0.0s">
+            <div class="card-meta">2026-04-28 02:38</div>
+            <h3 class="card-title">
+              <a href="https://qiita.com/t0hara/items/8a669c6e0a76d9b1875d?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items" target="_blank" rel="noopener">新人エンジニアこそ「個人開発」をやろう。完全無料で始めるCloudflareスタック入門</a>
+            </h3>
+            <p class='card-summary'>新生活が始まり、限られた時間の中でどう成長していくかは多くの新人エンジニアにとって共通のテーマではないでしょうか。
+数ある学習法の中でも、インプットした知識を「実力」に変えるためのステップとして、今回おすすめするのが個人開発という選択肢です。
+
+はじめに
+新人エンジニアとし...</p>
+          </article>
+          <article class="card" style="animation-delay:0.04s">
+            <div class="card-meta">2026-04-27 09:00</div>
+            <h3 class="card-title">
+              <a href="https://qiita.com/miruky/items/c2df4f23d73a8e05f37f?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items" target="_blank" rel="noopener">GWも勉強したい方向けに、よくオススメされる技術書をカテゴリ別にまとめてみた</a>
+            </h3>
+            <p class='card-summary'>はじめに
+こんばんは、mirukyです。
+GWは、まとまった学習時間を確保しやすい数少ないタイミングです。普段は業務や家事で後回しになりがちな基礎の穴埋めや、気になっていた分野の入門学習に、本腰を入れやすい期間でもあります。
+この記事では、よくおすすめされる技術書をカテ...</p>
+          </article>
+          <article class="card" style="animation-delay:0.08s">
+            <div class="card-meta">2026-04-30 02:17</div>
+            <h3 class="card-title">
+              <a href="https://qiita.com/masa20057/items/b1a956add6ec342f31b5?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items" target="_blank" rel="noopener">【初学者向け】「なんとなくコード書く」を卒業するためのアルゴリズム入門</a>
+            </h3>
+            <p class='card-summary'>株式会社 PRUMのmasaです。
+今日は「アルゴリズムの基本概念」という内容について、プログラミング初学者向けに記事を書きました。
+この記事を読むことで、難しく感じがちなアルゴリズムを身近なものとして理解し、論理的にコードを組み立てるきっかけを得られると思います。
+興味が...</p>
+          </article>
+          <article class="card" style="animation-delay:0.12s">
+            <div class="card-meta">2026-04-27 23:38</div>
+            <h3 class="card-title">
+              <a href="https://qiita.com/hosomatu/items/afdd509365a770598fc4?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items" target="_blank" rel="noopener">API Gateway → Lambda の間で何が行われているかを易しく解説</a>
+            </h3>
+            <p class='card-summary'>記事を書いたきっかけ
+人に教えることが増えてきたので、説明用にまとめてみました。
+「間の部分がわからない」という質問をよく受けるのですが、結局API Gatewayのことですね、ってパターンが多いのでこのようなタイトルにしました。
+API Gatewayの初級~中級レベル...</p>
+          </article>
+          <article class="card" style="animation-delay:0.16s">
+            <div class="card-meta">2026-04-28 03:32</div>
+            <h3 class="card-title">
+              <a href="https://qiita.com/i-inose/items/14f212258dc350857a94?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items" target="_blank" rel="noopener">【Claude Code入門】Skills 徹底解説 - 仕組みの解説からハンズオンまで</a>
+            </h3>
+            <p class='card-summary'>はじめに
+
+この記事は前回の Claude Code 入門記事を読んでいる前提で書いています。「Skill ってそもそも何？」という方は先にこちらをご覧ください。
+https://qiita.com/i-inose/items/e644e9b620ee1c8d3c1b
+...</p>
+          </article>
+          <article class="card" style="animation-delay:0.2s">
+            <div class="card-meta">2026-04-27 21:39</div>
+            <h3 class="card-title">
+              <a href="https://qiita.com/ssaita/items/091cb4ef066abfb1e06b?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items" target="_blank" rel="noopener">【書評】Qiita貢献度1位の『技術記事を書く技術』は、エンジニアの机に置いてほしい</a>
+            </h3>
+            <p class='card-summary'>はじめに
+この記事は、Qiitaのコントリビューションランキング総合1位である伊藤淳一さんが執筆された、『技術記事を書く技術』を読んだ感想を記したものです。
+この記事の読者として以下のような方々を想定しています。
+
+この本に興味がある人
+QiitaやZenn、ブログで記...</p>
+          </article>
+          <article class="card" style="animation-delay:0.24s">
+            <div class="card-meta">2026-04-29 22:10</div>
+            <h3 class="card-title">
+              <a href="https://qiita.com/KanNishida/items/4b3a0c02e58c3caa4e4b?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items" target="_blank" rel="noopener">なぜ深層学習は表形式データでツリーモデルに勝てないのか</a>
+            </h3>
+            <p class='card-summary'>深層学習がすべてを置き換えると思っていませんか？
+画像も、自然言語も、音声も。
+あらゆる分野で圧倒的な成果を出してきた深層学習。
+だからこそ、ビジネスの予測モデルにおいても、いずれは深層学習が主役になる。
+そう考えるのは自然なことです。
+しかし現実は、少し違います。
+顧客...</p>
+          </article>
+          <article class="card" style="animation-delay:0.28s">
+            <div class="card-meta">2026-04-28 04:04</div>
+            <h3 class="card-title">
+              <a href="https://qiita.com/hitomin_poke/items/018678abdb0267983fc3?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items" target="_blank" rel="noopener">【後編】9割の新人エンジニアがやっている 「承知しました」の落とし穴</a>
+            </h3>
+            <p class='card-summary'>はじめまして。株式会社PRUMでエンジニアをしている人見です。
+日々、プログラミング学習や実務の中で、つまずきやすいポイントや考え方を整理して発信しています。
+PRUMについて気になった方は、コーポレートサイトもぜひご覧ください。
+▶コーポレートサイト
+
+【後編】9割の新人...</p>
+          </article>
+          <article class="card" style="animation-delay:0.32s">
+            <div class="card-meta">2026-04-28 04:56</div>
+            <h3 class="card-title">
+              <a href="https://qiita.com/masa20057/items/3df8598b3ebaf1eb6888?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items" target="_blank" rel="noopener">【初学者向け】「どう並べて、どう取り出すか」で変わる - データ構造の基礎</a>
+            </h3>
+            <p class='card-summary'>株式会社PRUMのmasaです。
+今日は「データをどう並べ、どう取り出すか」というルール（データ構造）について、初学者向けにまとめました。
+プログラムは「データの集まり」をどう扱うかで、その動き方が大きく変わります。
+この記事では、データの扱い方の基本パターンを知ることで、...</p>
+          </article>
+          <article class="card" style="animation-delay:0.36s">
+            <div class="card-meta">2026-04-30 03:02</div>
+            <h3 class="card-title">
+              <a href="https://qiita.com/Rabbit_booK/items/e3b7ac45d5cc7699940f?utm_campaign=popular_items&amp;utm_medium=feed&amp;utm_source=popular_items" target="_blank" rel="noopener">新卒をメンタリングするつもりが、逆にメンタルケアされていた2年目エンジニアの話</a>
+            </h3>
+            <p class='card-summary'>はじめに
+未経験からエンジニアになり、現在はSREチームに所属している入社2年目の者です。
+最近、新卒研修の開発課題期間中のメンター／サポート役として、新卒社員のみなさんと1on1する機会を多くいただいています。最初は自分の話が役に立つのか心配でしたが、いろんな新卒社員と...</p>
+          </article>
+          </div>
+        </section>
+        <section class="feed-section" id="はてブ_IT">
+          <div class="feed-header" style="--accent: #00a4de">
+            <div class="feed-dot" style="background:#00a4de"></div>
+            <h2>はてブ IT</h2>
+            <span class="feed-badge">10件</span>
+          </div>
+          <div class="cards-grid">
+            
+          <article class="card" style="animation-delay:0.0s">
+            <div class="card-meta">2026-04-30 03:39</div>
+            <h3 class="card-title">
+              <a href="https://www.itmedia.co.jp/news/articles/2604/30/news088.html" target="_blank" rel="noopener">銀行員が支店内部を撮影？　BeReal映像がXで拡散　西日本シティ銀「事実確認中」</a>
+            </h3>
+            <p class='card-summary'>動画は4月29日ごろから拡散。銀行のカウンター内部とみられる場所で撮影されており、ホワイトボードに書かれた貸出金や預金残高などの業績目標とみられる数値、デスク上の書類、PC画面などが映り込んでいた。 動画内の掲示物やチラシの表記から、西日本シティ銀行の特定の支店の映像ではないかとの指摘がSNS上で広がった...</p>
+          </article>
+          <article class="card" style="animation-delay:0.04s">
+            <div class="card-meta">2026-04-29 02:37</div>
+            <h3 class="card-title">
+              <a href="https://note.com/kawaidesign/n/nce2f82c62f1f" target="_blank" rel="noopener">【完全版】Claude Code運用40選｜KAWAI</a>
+            </h3>
+            <p class='card-summary'>Claude Codeは、便利なチャットではありません。 設定、文脈、検証、自動化、並列化まで設計すると、日々の作業環境そのものになります。 この記事では、手元にあるClaude Code運用メモを土台に、Anthropic公式ドキュメント、Claude Help Center、GitHub Actions、MCP、Hooks、Skills、Subagents、非対話モード、情報収...</p>
+          </article>
+          <article class="card" style="animation-delay:0.08s">
+            <div class="card-meta">2026-04-29 21:34</div>
+            <h3 class="card-title">
+              <a href="https://pc.watch.impress.co.jp/docs/topic/feature/2105357.html" target="_blank" rel="noopener">【特集】 古いPCが無料で高機能NASに。「TrueNAS Community Edition」構築手順</a>
+            </h3>
+            
+          </article>
+          <article class="card" style="animation-delay:0.12s">
+            <div class="card-meta">2026-04-29 23:51</div>
+            <h3 class="card-title">
+              <a href="https://taisy0.com/2026/04/30/222691.html" target="_blank" rel="noopener">Apple、｢Vision Pro｣を事実上断念か ｰ 売れ行き低迷で新モデルの開発は停止 | 気になる、記になる…</a>
+            </h3>
+            <p class='card-summary'>MacRumorsが、Appleは「Vision Pro」を事実上断念したようだと報じています。 「Vision Pro」は昨年10月にM5チップ搭載モデルへとアップデートされましたが、その他のハードウェアの変更はなく、消費者の関心は依然として低い状況が続いていました。 「Vision Pro」は初代モデルの発売当初から人気が低く、総販売台数は...</p>
+          </article>
+          <article class="card" style="animation-delay:0.16s">
+            <div class="card-meta">2026-04-30 01:35</div>
+            <h3 class="card-title">
+              <a href="https://www.itmedia.co.jp/news/articles/2604/30/news025.html" target="_blank" rel="noopener">なぜ一部のAIモデルは「日本文化」に執着するのか？　「4o-mini」などの出力が日本に偏る実態、欧州チームが研究発表</a>
+            </h3>
+            <p class='card-summary'>2019年にスタートした本連載「Innovative Tech」は、世界中の幅広い分野から最先端の研究論文を独自視点で厳選、解説する。執筆は研究論文メディア「Seamless」（シームレス）を主宰し、日課として数多くの論文に目を通す山下氏が担当。イラストや漫画は、同メディア所属のアーティスト・おね氏が手掛けている。X：＠shi...</p>
+          </article>
+          <article class="card" style="animation-delay:0.2s">
+            <div class="card-meta">2026-04-30 03:04</div>
+            <h3 class="card-title">
+              <a href="https://scrapbox.io/kawasima/Decision_Quality_%E3%81%A8%E8%A8%AD%E8%A8%88%E5%88%A4%E6%96%AD%E5%A4%B1%E6%95%97%E3%83%91%E3%82%BF%E3%83%BC%E3%83%B3" target="_blank" rel="noopener">Decision Quality と設計判断失敗パターン - kawasima</a>
+            </h3>
+            <p class='card-summary'>Decision Quality (DQ) は SDG が体系化した意思決定の質の枠組みで、良い意思決定の条件を6つに分解する。 Frame（解くべき問題の枠組み） Alternatives（選択肢） Information（情報） Values（評価基準） Sound Reasoning（論理的推論） Commitment to Action（実行へのコミット） 全体の質は一番弱い要素で決まる、...</p>
+          </article>
+          <article class="card" style="animation-delay:0.24s">
+            <div class="card-meta">2026-04-29 03:16</div>
+            <h3 class="card-title">
+              <a href="https://zenn.dev/wwwave/articles/4d21d34ad604ba" target="_blank" rel="noopener">Claude Codeにレビューを任せてチームの負担を減らす</a>
+            </h3>
+            <p class='card-summary'>はじめに チームのコードレビューの負担を少しでも減らすために、Claude Code の Skill を使い、backend（Rails）レビュー用の /review-backend を作成しました。 この記事では、/review-backend の使い方と、実際に配置した設定ファイルを紹介します。 暫く使って安定したら、frontend 用にも展開する予定です。 狙いは...</p>
+          </article>
+          <article class="card" style="animation-delay:0.28s">
+            <div class="card-meta">2026-04-29 13:32</div>
+            <h3 class="card-title">
+              <a href="https://kensuu.com/n/n75b652e1ce81" target="_blank" rel="noopener">AIの本質は『出力』じゃなくて『構造の仮置き』なのかも、という話 #PR｜けんすう</a>
+            </h3>
+            <p class='card-summary'>こんにちは！けんすうです。 最近、Manus さんからPR記事の依頼を受けて、張り切って書いてたんですが、 「スプレッドシート系のツールが熱いな」と思って、いろいろ触っていたんですが、機能を紹介するよりも、「Excelの話というより、AIプロダクト全般の本質の話だよな」と思ったことがあったので、書いてみます！ Wha...</p>
+          </article>
+          <article class="card" style="animation-delay:0.32s">
+            <div class="card-meta">2026-04-30 01:28</div>
+            <h3 class="card-title">
+              <a href="https://levtech.jp/media/detail_854/" target="_blank" rel="noopener">データ送受信は「iOS超え」か。スマホ、PC、サーバーまで同一OSで動かすファーウェイの野望｜レバテックLAB - レバテックLAB</a>
+            </h3>
+            <p class='card-summary'>ITジャーナリスト 牧野 武文（まきの たけふみ） 生活とテクノロジー、ビジネスの関係を考えるITジャーナリスト、中国テックウォッチャー。著書に「Googleの正体」（マイコミ新書）、「任天堂ノスタルジー・横井軍平とその時代」（角川新書）など。 @takemakino スマートフォン（以下、スマホ）OSと言えば、AppleのiOSと...</p>
+          </article>
+          <article class="card" style="animation-delay:0.36s">
+            <div class="card-meta">2026-04-29 22:07</div>
+            <h3 class="card-title">
+              <a href="https://gigazine.net/news/20260430-why-cancelled-claude/" target="_blank" rel="noopener">「私がClaudeを解約した理由」をエンジニアが力説、トークン問題・品質低下・サポート不備など</a>
+            </h3>
+            <p class='card-summary'>ドイツ人エンジニアのニッキー・ライナート氏が、Anthropicの生成AIアシスタントであるClaudeの有料プランを解約した理由を自身のブログにまとめています。 Why I Cancelled Claude: Token Issues, Declining Quality, and Poor Support - Nicky Reinert https://nickyreinert.de/en/2...</p>
+          </article>
+          </div>
+        </section>
+        <section class="feed-section" id="Gizmodo_Japan">
+          <div class="feed-header" style="--accent: #e5185b">
+            <div class="feed-dot" style="background:#e5185b"></div>
+            <h2>Gizmodo Japan</h2>
+            <span class="feed-badge">10件</span>
+          </div>
+          <div class="cards-grid">
+            
+          <article class="card" style="animation-delay:0.0s">
+            <div class="card-meta">2026-04-30 09:00</div>
+            <h3 class="card-title">
+              <a href="https://www.gizmodo.jp/2026/04/hario_tea-and-coffee-maker-mug_review.html" target="_blank" rel="noopener">急須もドリッパーも不要。ハリオのマグさえあれば、お茶もコーヒーも時短に</a>
+            </h3>
+            <p class='card-summary'>ROOMIE2025年8月13日掲載の記事より転載朝のコーヒータイムや、在宅ワークの合間。一息つくのに、美味しいコーヒーやお茶を淹れたくなります。が、いざ飲むとなると、ドリッパーや急須を用意してお湯を沸かして……と意外と手間がかるんですよね。時間がないときに、もっと手軽、時短に楽しめたらなぁ。このマグカップひとつでOK！Photo:タカマツミキそこで、導入したのがHARIOの「ティー＆コーヒーメー</p>
+          </article>
+          <article class="card" style="animation-delay:0.04s">
+            <div class="card-meta">2026-04-30 08:00</div>
+            <h3 class="card-title">
+              <a href="https://www.gizmodo.jp/2026/04/switchbot-smartdailystation.html" target="_blank" rel="noopener">主張しないのに、仕事はする。SwitchBot スマートデイリーステーションで「置くだけデジタルデトックス」を実現</a>
+            </h3>
+            <p class='card-summary'>Photo:DaisukeIshizaka目がさめた。微睡みのなか、カーテン越しに入る光は控えめだ。「今日の天気はどうかな」。そう思って、枕元のスマホを手に取る。ロックを解除し、天気予報のアプリをタップする。そこまではよかったんだ。Photo:DaisukeIshizakaけれど、画面の通知アイコンが目に入る。友人からのメッセージ、SNSのレスポンス、深夜に更新されたニュースなどなど。ほんの数秒の</p>
+          </article>
+          <article class="card" style="animation-delay:0.08s">
+            <div class="card-meta">2026-04-30 07:55</div>
+            <h3 class="card-title">
+              <a href="https://www.gizmodo.jp/2026/04/amazon-timesale-fes-2026-0430-3.html" target="_blank" rel="noopener">【39%オフ】自転車ルール厳しすぎ…。信頼のジェントス製ライトで青切符を回避すべし</a>
+            </h3>
+            <p class='card-summary'>Amazon（アマゾン）では、2026年4月30日(木)9時から5月3日(日)23時59分まで「AmazonスマイルSALE」を開催中。
+
+現在、1978年創業の国内LEDライトメーカー・GENTOS（ジェントス）の自転車用ライト「BIKE LIGHT XB-50D」がお得に登場しています。</p>
+          </article>
+          <article class="card" style="animation-delay:0.12s">
+            <div class="card-meta">2026-04-30 07:00</div>
+            <h3 class="card-title">
+              <a href="https://www.gizmodo.jp/2026/04/g-shock-coca-cola.html" target="_blank" rel="noopener">昭和レトロ。コカ・コーラ140周年のお祝いにボトル色のG-SHOCKを発売</a>
+            </h3>
+            <p class='card-summary'>Image:G-SHOCKガラス瓶にソックリすぎる。カシオの耐衝撃腕時計「G-SHOCK」は、たくさんのコラボモデルがあります。ほとんどはロゴを載せたり色味を近付けたり、バックライトでロゴが光るくらい。エッセンスを採り込む以上に、似せて作ったモデルはあんまりないかも…？スケルトン以上ガラス未満新作「GA-2100CC-3AJR」は、コカ・コーラ140周年のお祝いに生まれたコラボモデル。ベースは8角</p>
+          </article>
+          <article class="card" style="animation-delay:0.16s">
+            <div class="card-meta">2026-04-30 06:55</div>
+            <h3 class="card-title">
+              <a href="https://www.gizmodo.jp/2026/04/308619-amazon-2604-redmi-ehl.html" target="_blank" rel="noopener">充電を気にせず動画漬け。2万円台で「毎日充電」から解放されるタブレットが出ちゃった</a>
+            </h3>
+            <p class='card-summary'>スマホより大きな画面で電子書籍の閲覧やゲーム、動画視聴などを楽しめる「タブレット」。パソコン代わりとしても使えるモデルや、映画や音楽を臨場感あふれるサウンドで楽しめるモデルなど、さまざまなタブレットが発売されているので、どれを購入すれば良いか迷っている人も多いのではないでしょうか。そこで今回は、2.5K解像度の11インチ大画面と9000mAhバッテリーを備え、エンタメから仕事まで快適にこなせる、X</p>
+          </article>
+          <article class="card" style="animation-delay:0.2s">
+            <div class="card-meta">2026-04-30 06:30</div>
+            <h3 class="card-title">
+              <a href="https://www.gizmodo.jp/2026/04/amazon-sale-airpods-4-1.html" target="_blank" rel="noopener">AirPods 4が6,000円も安い。これだからセールはたまんねぇ！</a>
+            </h3>
+            <p class='card-summary'>Image:AmazonやっぱAmazonしか勝たん。Apple（アップル）製品を買う時、公式のAppleストアが定番。でも、僕はだいたいAmazonをチェックしています。最近はAmazonでも新製品早めに取り扱ってくれていますし、ちょっと待てばセールにもなってくれるので、お得度重視ならAmazonが強いわけですよ。たとえば、AirPods4を見てください。AppleAirPods4アクティブノイ</p>
+          </article>
+          <article class="card" style="animation-delay:0.24s">
+            <div class="card-meta">2026-04-30 06:00</div>
+            <h3 class="card-title">
+              <a href="https://www.gizmodo.jp/2026/04/car_item_3-ow4.html" target="_blank" rel="noopener">お出かけ前にポチりたい。車をも〜っと快適にするガジェット＆アイテム3つ</a>
+            </h3>
+            <p class='card-summary'>Photo:SUMA-KIYO2025年5月4日の記事を編集して再掲載しています。暖かくなって、お出かけする機会も増えれば、車に乗る機会も増えるというもの。今回は1つあるだけで、車をも〜っと快適にするアイテムやガジェットをまとめてご紹介いたします。コスパ神な車載充電器Photo:SUMA-KIYO｢UGREENMagFlowQi2MagSafeワイヤレス車充電器｣は、15Wの高出力に対応したワイヤ</p>
+          </article>
+          <article class="card" style="animation-delay:0.28s">
+            <div class="card-meta">2026-04-30 05:55</div>
+            <h3 class="card-title">
+              <a href="https://www.gizmodo.jp/2026/04/amazon-timesale-fes-2026-0430-2.html" target="_blank" rel="noopener">Xiaomiのハイエンド級スマホ「POCO X8 Pro」、過去最安でコスパ爆走</a>
+            </h3>
+            <p class='card-summary'>Amazon（アマゾン）では、2026年4月30日(木)9時から5月3日(日)23時59分まで「AmazonスマイルSALE」を開催中。
+現在、 ハイエンドモデルに匹敵するパワーと処理能力を誇るXiaomi（シャオミ）の最新スマートフォン「POCO X8 Pro（8GB+256GB）」が、お得に登場しています。</p>
+          </article>
+          <article class="card" style="animation-delay:0.32s">
+            <div class="card-meta">2026-04-30 05:00</div>
+            <h3 class="card-title">
+              <a href="https://www.gizmodo.jp/2026/04/amazon-jackery-portable-battery.html" target="_blank" rel="noopener">レジャーへ文明（電気）を持って行こう！ 42％OFFのポタ電がそう囁く</a>
+            </h3>
+            <p class='card-summary'>Image:Amazon文明の利器から離れなくても、それはそれでいい。日常から離れてゆっくりと自然を楽しむ。いいですよね。キャンプやピクニックって。でも、別に完全に文明離れする義務はないわけで。たとえば今なら、ポータブル電源があれば、より快適で身近になりますし、持って行くアイテムたちの幅も広がりますよね。でも、ポタ電って高いしなぁ…ってあるじゃないですか。いいタイミングです。Jackeryポータブ</p>
+          </article>
+          <article class="card" style="animation-delay:0.36s">
+            <div class="card-meta">2026-04-30 04:55</div>
+            <h3 class="card-title">
+              <a href="https://www.gizmodo.jp/2026/04/305541-2604-amazon-yamazen-sunshadecube-y6w.html" target="_blank" rel="noopener">約30秒で撤収!? 設営ストレスをとことん無くした山善のサンシェードはアウトドアの必需品</a>
+            </h3>
+            <p class='card-summary'>太陽の光を遮り、日除けの役割を果たすテント型の「サンシェード」はアウトドアの必須アイテムです！テントとは異なり、入り口がオープンになっているため、出入りがしやすく休憩などに使いやすいのも魅力的。とはいえ、準備や片付けが面倒でなかなか手を出しづらい…、なんて人も。手軽に使えるサンシェードを探している人におすすめなのが、山善（YAMAZEN）の「パッとサッとサンシェード キューブ」。</p>
+          </article>
+          </div>
+        </section>
+        <section class="feed-section" id="WIRED_Japan">
+          <div class="feed-header" style="--accent: #111">
+            <div class="feed-dot" style="background:#111"></div>
+            <h2>WIRED Japan</h2>
+            <span class="feed-badge">0件</span>
+          </div>
+          <p class="empty-msg">記事を取得できませんでした。</p>
+        </section>
+  </main>
+
+</body>
+</html>
