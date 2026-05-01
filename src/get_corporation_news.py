@@ -47,6 +47,12 @@ COMPANIES: list[dict] = [
         "url":      "https://www.yokogawa.co.jp/rss/news/pr/",
         "color":    "#ff0000",
     },
+    {
+      "name": "安川電機",
+      "industry": "製造業",
+      "url" : "https://www.yaskawa.co.jp/category/technology/feed?post_type=post",  
+      "color":    "#00a0e9",
+    },
     # --- IT ---
     {
         "name":     "NTTドコモ",
@@ -446,8 +452,8 @@ def main() -> None:
         f.write(html_content)
 
     total: int = sum(len(c["articles"]) for c in feed_data)
-    print(f"\n✅ 完了！ {total}件の記事を取得しました。")
-    print(f"📄 出力ファイル: {output_path}")
+    print(f"\n完了！ {total}件の記事を取得しました。")
+    print(f"出力ファイル: {output_path}")
     print("\nブラウザで開いてください。")
 
     try:

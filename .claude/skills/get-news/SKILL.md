@@ -36,6 +36,9 @@ disable-model-invocation: true
 
 /clear を実行
 
+# 備考
+- スクリプト実行後は何も実行しない
+
 # 使い方
 
 /get-news で実行
