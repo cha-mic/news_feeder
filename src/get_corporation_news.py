@@ -1,14 +1,4 @@
 #!/usr/bin/env python3
-"""
-Tech RSS Reader
-テクノロジー系ニュースを取得して、ブラウザで見られるHTMLファイルを生成します。
-
-使い方:
-  python rss_reader.py
-
-必要なライブラリのインストール:
-  pip install feedparser requests
-"""
 
 import datetime
 import html
@@ -21,109 +11,72 @@ import sys
 import feedparser
 
 # ============================================================
-# 取得するRSSフィードの設定（自由に追加・変更できます）
+# 対象企業の設定
+# industry: "製造業" または "IT"
+# url: 各社HPのニュース・プレスリリースRSSフィードURL
 # ============================================================
-# FEEDS = [
-#     {
-#         "name": "Hacker News",
-#         "url": "https://news.ycombinator.com/rss",
-#         "color": "#ff6600",
-#     },
-#     {
-#         "name": "TechCrunch",
-#         "url": "https://techcrunch.com/feed/",
-#         "color": "#0a8a00",
-#     },
-#     {
-#         "name": "The Verge",
-#         "url": "https://www.theverge.com/rss/index.xml",
-#         "color": "#e5185b",
-#     },
-#     {
-#         "name": "Wired",
-#         "url": "https://www.wired.com/feed/rss",
-#         "color": "#c00",
-#     },
-#     {
-#         "name": "MIT Technology Review",
-#         "url": "https://www.technologyreview.com/feed/",
-#         "color": "#a00022",
-#     },
-# ]
-
-FEEDS: list[dict] = [
+COMPANIES: list[dict] = [
+    # --- 製造業 ---
     {
-        "name": "GIGAZINE",
-        "url": "https://gigazine.net/news/rss_2.0/",
-        "color": "#ff6600"
+        "name":     "トヨタ自動車",
+        "industry": "製造業",
+        "url":      "https://global.toyota/export/jp/allnews_rss.xml",
+        "color":    "#eb0a1e",
     },
     {
-        "name": "ITmedia",
-        "url": "https://rss.itmedia.co.jp/rss/2.0/itmedia_all.xml",
-        "color": "#c00"
+        "name":     "パナソニック(プレスリリース)",
+        "industry": "製造業",
+        "url":      "https://news.panasonic.com/jp/rss/press/index.xml",
+        "color":    "#0041a0",
     },
     {
-        "name": "日経クロステック",
-        "url": "https://xtech.nikkei.com/rss/index.rdf",
-        "color": "#003580"
+        "name":     "パナソニック(研究開発)",
+        "industry": "製造業",
+        "url":      "https://news.panasonic.com/jp/rss/category/tech-rd.xml",
+        "color":    "#0041a0",
     },
     {
-        "name": "Gizmodo Japan",
-        "url": "https://www.gizmodo.jp/index.xml",
-        "color": "#e5185b"
+        "name":     "三菱重工業",
+        "industry": "製造業",
+        "url":      "https://www.mhi.com/jp/rss/mhi_news.xml",
+        "color":    "#003087",
     },
     {
-        "name": "WIRED Japan",
-        "url": "https://wired.jp/feed/",
-        "color": "#111"
+        "name":     "横河電機",
+        "industry": "製造業",
+        "url":      "https://www.yokogawa.co.jp/rss/news/pr/",
+        "color":    "#ff0000",
     },
+    # --- IT ---
     {
-        "name": "Code Zine",
-        "url": "https://codezine.jp/rss/new/20/index.xml",
-        "color": "#d3002d"
-    },
-    {
-        "name": "Zenn トレンド",
-        "url": "https://zenn.dev/feed",
-        "color": "#3ea8ff"
-    },
-    {
-        "name": "Qiita 人気記事",
-        "url": "https://qiita.com/popular-items/feed.atom",
-        "color": "#55c500"
-    },
-    {
-        "name": "はてブ IT",
-        "url": "https://b.hatena.ne.jp/hotentry/it.rss",
-        "color": "#00a4de"
+        "name":     "NTTドコモ",
+        "industry": "IT",
+        "url":      "https://www.ntt.com/index/rss.xml",
+        "color":    "#00a0e9",
     },
 ]
 
-MAX_ARTICLES_PER_FEED: int = 10
+INDUSTRIES: list[str] = ["製造業", "IT"]
 
-OUTPUT_FILE: str = "..\\output\\tech_news.html"
+MAX_ARTICLES_PER_COMPANY: int = 10
+
+OUTPUT_FILE: str = "..\\output\\corporation_news.html"
 
 
-# ============================================================
-# RSSフィード取得
-# ============================================================
-def fetch_feed(feed_info: dict) -> list[dict]:
-    """RSSフィードを取得して記事リストを返す
-
-    指定されたフィード情報からRSSを取得し、記事データのリストを返す。
-    取得に失敗した場合は空リストを返す。
+def fetch_company_news(company: dict) -> list[dict]:
+    """企業HPのRSSフィードからニュースを取得する
 
     Args:
-        feed_info (dict): フィード情報（name, url, colorを含む辞書）
+        company (dict): 企業情報（name, industry, url, colorを含む辞書）
 
     Returns:
-        list[dict]: 記事データのリスト（title, link, summary, publishedを含む辞書）
+        list[dict]: ニュース記事のリスト（title, link, summary, publishedを含む辞書）
     """
-    print(f"  取得中: {feed_info['name']} ...", end=" ", flush=True)
+    print(f"  取得中: {company['name']} ...", end=" ", flush=True)
     try:
-        parsed = feedparser.parse(feed_info["url"])
+        parsed = feedparser.parse(company["url"])
         articles: list[dict] = []
-        for entry in parsed.entries[:MAX_ARTICLES_PER_FEED]:
+        for entry in parsed.entries[:MAX_ARTICLES_PER_COMPANY]:
             title:   str = entry.get("title", "（タイトルなし）")
             link:    str = entry.get("link", "#")
             summary: str = entry.get("summary", entry.get("description", ""))
@@ -139,9 +92,9 @@ def fetch_feed(feed_info: dict) -> list[dict]:
                 pub_str = "日時不明"
 
             articles.append({
-                "title": html.escape(title),
-                "link": html.escape(link),
-                "summary": html.escape(summary),
+                "title":     html.escape(title),
+                "link":      html.escape(link),
+                "summary":   html.escape(summary),
                 "published": pub_str,
             })
         print(f"{len(articles)}件取得")
@@ -151,78 +104,86 @@ def fetch_feed(feed_info: dict) -> list[dict]:
         return []
 
 
-# ============================================================
-# HTML生成
-# ============================================================
 def generate_html(feed_data: list[dict]) -> str:
-    """フィードデータからHTMLコンテンツを生成する
-
-    取得したフィードデータを元に、サイドバーとカードグリッドを持つHTMLを生成する。
+    """業界別に企業ニュースをまとめたHTMLを生成する
 
     Args:
-        feed_data (list[dict]): フィードデータのリスト（name, color, articlesを含む辞書）
+        feed_data (list[dict]): 企業ごとのニュースデータ（name, industry, color, articlesを含む辞書）
 
     Returns:
         str: 生成されたHTMLコンテンツ
     """
     now:   str = datetime.datetime.now().strftime("%Y年%m月%d日 %H:%M")
-    total: int = sum(len(f["articles"]) for f in feed_data)
+    total: int = sum(len(c["articles"]) for c in feed_data)
 
     nav_links: str = ""
-    for f in feed_data:
-        anchor: str = f["name"].replace(" ", "_")
-        count:  int = len(f["articles"])
-        nav_links += f"""
-        <a href="#{anchor}" class="nav-link" style="--accent: {f['color']}">
-          <span class="nav-dot" style="background:{f['color']}"></span>
-          {f['name']}
+    for industry in INDUSTRIES:
+        nav_links += f'<div class="nav-section-label">{industry}</div>'
+        for c in feed_data:
+            if c["industry"] != industry:
+                continue
+            anchor: str = c["name"].replace(" ", "_")
+            count:  int = len(c["articles"])
+            nav_links += f"""
+        <a href="#{anchor}" class="nav-link" style="--accent: {c['color']}">
+          <span class="nav-dot" style="background:{c['color']}"></span>
+          {c['name']}
           <span class="nav-count">{count}</span>
         </a>"""
 
-    feed_sections: str = ""
-    for f in feed_data:
-        anchor: str = f["name"].replace(" ", "_")
-        if not f["articles"]:
-            feed_sections += f"""
+    industry_sections: str = ""
+    for industry in INDUSTRIES:
+        companies_in_industry: list[dict] = [
+            c for c in feed_data if c["industry"] == industry
+        ]
+        company_sections: str = ""
+        for c in companies_in_industry:
+            anchor = c["name"].replace(" ", "_")
+            if not c["articles"]:
+                company_sections += f"""
         <section class="feed-section" id="{anchor}">
-          <div class="feed-header" style="--accent: {f['color']}">
-            <div class="feed-dot" style="background:{f['color']}"></div>
-            <h2>{f['name']}</h2>
+          <div class="feed-header" style="--accent: {c['color']}">
+            <div class="feed-dot" style="background:{c['color']}"></div>
+            <h3>{c['name']}</h3>
             <span class="feed-badge">0件</span>
           </div>
           <p class="empty-msg">記事を取得できませんでした。</p>
         </section>"""
-            continue
+                continue
 
-        cards: str = ""
-        for i, article in enumerate(f["articles"]):
-            cards += f"""
+            cards: str = ""
+            for i, article in enumerate(c["articles"]):
+                cards += f"""
           <article class="card" style="animation-delay:{i * 0.04}s">
             <div class="card-meta">{article['published']}</div>
-            <h3 class="card-title">
+            <h4 class="card-title">
               <a href="{article['link']}" target="_blank" rel="noopener">{article['title']}</a>
-            </h3>
+            </h4>
             {"<p class='card-summary'>" + article['summary'] + "</p>" if article['summary'] else ""}
           </article>"""
 
-        feed_sections += f"""
+            company_sections += f"""
         <section class="feed-section" id="{anchor}">
-          <div class="feed-header" style="--accent: {f['color']}">
-            <div class="feed-dot" style="background:{f['color']}"></div>
-            <h2>{f['name']}</h2>
-            <span class="feed-badge">{len(f['articles'])}件</span>
+          <div class="feed-header" style="--accent: {c['color']}">
+            <div class="feed-dot" style="background:{c['color']}"></div>
+            <h3>{c['name']}</h3>
+            <span class="feed-badge">{len(c['articles'])}件</span>
           </div>
-          <div class="cards-grid">
-            {cards}
-          </div>
+          <div class="cards-grid">{cards}</div>
         </section>"""
+
+        industry_sections += f"""
+      <div class="industry-group">
+        <h2 class="industry-heading">{industry}</h2>
+        {company_sections}
+      </div>"""
 
     html_content: str = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tech News — {now}</title>
+  <title>企業ニュース — {now}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
@@ -248,7 +209,6 @@ def generate_html(feed_data: list[dict]) -> str:
       display: flex;
     }}
 
-    /* ---- Sidebar ---- */
     .sidebar {{
       width: var(--sidebar-w);
       min-height: 100vh;
@@ -278,7 +238,7 @@ def generate_html(feed_data: list[dict]) -> str:
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--muted);
-      padding: 0 1.4rem 0.6rem;
+      padding: 0.8rem 1.4rem 0.4rem;
     }}
 
     .nav-link {{
@@ -290,7 +250,6 @@ def generate_html(feed_data: list[dict]) -> str:
       color: var(--muted);
       text-decoration: none;
       transition: color 0.15s, background 0.15s;
-      position: relative;
     }}
     .nav-link:hover {{
       color: var(--text);
@@ -306,7 +265,6 @@ def generate_html(feed_data: list[dict]) -> str:
       line-height: 1.6;
     }}
 
-    /* ---- Main ---- */
     .main {{
       flex: 1;
       min-width: 0;
@@ -330,8 +288,21 @@ def generate_html(feed_data: list[dict]) -> str:
     .page-meta {{ font-size: 0.8rem; color: var(--muted); }}
     .page-total {{ margin-left: auto; font-size: 0.8rem; color: var(--muted); }}
 
-    /* ---- Feed section ---- */
-    .feed-section {{ margin-bottom: 3.5rem; }}
+    .industry-group {{ margin-bottom: 4rem; }}
+
+    .industry-heading {{
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.6rem;
+      margin-bottom: 2rem;
+    }}
+
+    .feed-section {{ margin-bottom: 2.5rem; }}
 
     .feed-header {{
       display: flex;
@@ -339,8 +310,8 @@ def generate_html(feed_data: list[dict]) -> str:
       gap: 0.8rem;
       margin-bottom: 1.2rem;
     }}
-    .feed-dot {{ width: 10px; height: 10px; border-radius: 50%; }}
-    .feed-header h2 {{
+    .feed-dot {{ width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }}
+    .feed-header h3 {{
       font-family: 'Syne', sans-serif;
       font-weight: 700;
       font-size: 1rem;
@@ -354,7 +325,6 @@ def generate_html(feed_data: list[dict]) -> str:
       color: var(--muted);
     }}
 
-    /* ---- Cards ---- */
     .cards-grid {{
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -401,7 +371,6 @@ def generate_html(feed_data: list[dict]) -> str:
 
     .empty-msg {{ color: var(--muted); font-size: 0.85rem; padding: 1rem 0; }}
 
-    /* scrollbar */
     ::-webkit-scrollbar {{ width: 6px; }}
     ::-webkit-scrollbar-track {{ background: transparent; }}
     ::-webkit-scrollbar-thumb {{ background: rgba(255,255,255,0.12); border-radius: 3px; }}
@@ -415,8 +384,7 @@ def generate_html(feed_data: list[dict]) -> str:
 <body>
 
   <nav class="sidebar">
-    <div class="sidebar-logo">Tech News<span>RSS Reader</span></div>
-    <div class="nav-section-label">フィード</div>
+    <div class="sidebar-logo">Corp News<span>企業ニュース</span></div>
     {nav_links}
     <div class="sidebar-footer">
       更新: {now}<br>
@@ -427,13 +395,12 @@ def generate_html(feed_data: list[dict]) -> str:
   <main class="main">
     <div class="page-header">
       <div>
-        <div class="page-title">Tech News</div>
+        <div class="page-title">企業ニュース</div>
         <div class="page-meta">取得日時: {now}</div>
       </div>
       <div class="page-total">合計 {total} 件</div>
     </div>
-
-    {feed_sections}
+    {industry_sections}
   </main>
 
 </body>
@@ -441,19 +408,16 @@ def generate_html(feed_data: list[dict]) -> str:
     return html_content
 
 
-# ============================================================
-# メイン処理
-# ============================================================
 def main() -> None:
     """メイン処理
 
-    RSSフィードを取得してHTMLファイルを生成し、ブラウザで開く。
+    企業HPのRSSフィードからニュースを取得してHTMLファイルを生成し、ブラウザで開く。
 
     Raises:
         SystemExit: feedparserがインストールされていない場合
     """
     print("=" * 50)
-    print("  Tech RSS Reader")
+    print("  Corporate News Reader")
     print("=" * 50)
 
     try:
@@ -464,27 +428,27 @@ def main() -> None:
         print("  pip install feedparser\n")
         sys.exit(1)
 
-    print(f"\nフィードを取得中... ({len(FEEDS)}件のソース)\n")
+    print(f"\nニュースを取得中... ({len(COMPANIES)}社)\n")
 
     feed_data: list[dict] = []
-    for feed_info in FEEDS:
-        articles: list[dict] = fetch_feed(feed_info)
+    for company in COMPANIES:
+        articles: list[dict] = fetch_company_news(company)
         feed_data.append({
-            **feed_info,
+            **company,
             "articles": articles,
         })
 
-    print(f"\nHTMLを生成中...")
+    print("\nHTMLを生成中...")
     html_content: str = generate_html(feed_data)
 
     output_path: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), OUTPUT_FILE)
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html_content)
 
-    total: int = sum(len(f["articles"]) for f in feed_data)
+    total: int = sum(len(c["articles"]) for c in feed_data)
     print(f"\n✅ 完了！ {total}件の記事を取得しました。")
     print(f"📄 出力ファイル: {output_path}")
-    print(f"\nブラウザで開いてください。")
+    print("\nブラウザで開いてください。")
 
     try:
         if platform.system() == "Darwin":
