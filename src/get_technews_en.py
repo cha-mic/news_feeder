@@ -23,79 +23,31 @@ import feedparser
 # ============================================================
 # 取得するRSSフィードの設定（自由に追加・変更できます）
 # ============================================================
-# FEEDS = [
-#     {
-#         "name": "Hacker News",
-#         "url": "https://news.ycombinator.com/rss",
-#         "color": "#ff6600",
-#     },
-#     {
-#         "name": "TechCrunch",
-#         "url": "https://techcrunch.com/feed/",
-#         "color": "#0a8a00",
-#     },
-#     {
-#         "name": "The Verge",
-#         "url": "https://www.theverge.com/rss/index.xml",
-#         "color": "#e5185b",
-#     },
-#     {
-#         "name": "Wired",
-#         "url": "https://www.wired.com/feed/rss",
-#         "color": "#c00",
-#     },
-#     {
-#         "name": "MIT Technology Review",
-#         "url": "https://www.technologyreview.com/feed/",
-#         "color": "#a00022",
-#     },
-# ]
-
 FEEDS: list[dict] = [
     {
-        "name": "GIGAZINE",
-        "url": "https://gigazine.net/news/rss_2.0/",
-        "color": "#ff6600"
+        "name": "Hacker News",
+        "url": "https://news.ycombinator.com/rss",
+        "color": "#ff6600",
     },
     {
-        "name": "ITmedia",
-        "url": "https://rss.itmedia.co.jp/rss/2.0/itmedia_all.xml",
-        "color": "#c00"
+        "name": "TechCrunch",
+        "url": "https://techcrunch.com/feed/",
+        "color": "#0a8a00",
     },
     {
-        "name": "日経クロステック",
-        "url": "https://xtech.nikkei.com/rss/index.rdf",
-        "color": "#003580"
+        "name": "The Verge",
+        "url": "https://www.theverge.com/rss/index.xml",
+        "color": "#e5185b",
     },
     {
-        "name": "Gizmodo Japan",
-        "url": "https://www.gizmodo.jp/index.xml",
-        "color": "#e5185b"
+        "name": "Wired",
+        "url": "https://www.wired.com/feed/rss",
+        "color": "#c00",
     },
     {
-        "name": "WIRED Japan",
-        "url": "https://wired.jp/feed/",
-        "color": "#111"
-    },
-    {
-        "name": "Code Zine",
-        "url": "https://codezine.jp/rss/new/20/index.xml",
-        "color": "#d3002d"
-    },
-    {
-        "name": "Zenn トレンド",
-        "url": "https://zenn.dev/feed",
-        "color": "#3ea8ff"
-    },
-    {
-        "name": "Qiita 人気記事",
-        "url": "https://qiita.com/popular-items/feed.atom",
-        "color": "#55c500"
-    },
-    {
-        "name": "はてブ IT",
-        "url": "https://b.hatena.ne.jp/hotentry/it.rss",
-        "color": "#00a4de"
+        "name": "MIT Technology Review",
+        "url": "https://www.technologyreview.com/feed/",
+        "color": "#a00022",
     },
 ]
 
