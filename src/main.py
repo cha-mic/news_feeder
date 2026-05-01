@@ -10,11 +10,15 @@ Tech RSS Reader
   pip install feedparser requests
 """
 
-import feedparser
 import datetime
 import html
 import os
+import platform
+import re
+import subprocess
 import sys
+
+import feedparser
 
 # ============================================================
 # 取得するRSSフィードの設定（自由に追加・変更できます）
@@ -47,35 +51,35 @@ import sys
 #     },
 # ]
 
-FEEDS = [
+FEEDS: list[dict] = [
     {
         "name": "GIGAZINE",
-        "url": "https://gigazine.net/news/rss_2.0/",                      
+        "url": "https://gigazine.net/news/rss_2.0/",
         "color": "#ff6600"
     },
     {
-        "name": "ITmedia",           
-        "url": "https://rss.itmedia.co.jp/rss/2.0/itmedia_all.xml",       
+        "name": "ITmedia",
+        "url": "https://rss.itmedia.co.jp/rss/2.0/itmedia_all.xml",
         "color": "#c00"
     },
     {
-        "name": "日経クロステック",   
-        "url": "https://xtech.nikkei.com/rss/index.rdf",                  
+        "name": "日経クロステック",
+        "url": "https://xtech.nikkei.com/rss/index.rdf",
         "color": "#003580"
     },
     {
         "name": "Zenn トレンド",
-        "url": "https://zenn.dev/feed",                                   
+        "url": "https://zenn.dev/feed",
         "color": "#3ea8ff"
     },
     {
-        "name": "Qiita 人気記事",     
-        "url": "https://qiita.com/popular-items/feed.atom",               
+        "name": "Qiita 人気記事",
+        "url": "https://qiita.com/popular-items/feed.atom",
         "color": "#55c500"
     },
     {
         "name": "はてブ IT",
-        "url": "https://b.hatena.ne.jp/hotentry/it.rss",                  
+        "url": "https://b.hatena.ne.jp/hotentry/it.rss",
         "color": "#00a4de"
     },
     {
@@ -84,39 +88,57 @@ FEEDS = [
         "color": "#e5185b"
     },
     {
-        "name": "WIRED Japan",       
-        "url": "https://wired.jp/feed/",                                  
+        "name": "WIRED Japan",
+        "url": "https://wired.jp/feed/",
         "color": "#111"
+    },
+    {
+        "name": "技術評論社 新刊",
+        "url": "https://gihyo.jp/book/feed/rss2",
+        "color": "#e0321c"
+    },
+    {
+        "name": "O'Reilly Japan 新刊",
+        "url": "https://www.oreilly.co.jp/catalog/soon.xml",
+        "color": "#d3002d"
     },
 ]
 
-# 各フィードから取得する最大記事数
-MAX_ARTICLES_PER_FEED = 10
+MAX_ARTICLES_PER_FEED: int = 10
 
-# 出力するHTMLファイル名
-OUTPUT_FILE = "..\\output\\tech_news.html"
+OUTPUT_FILE: str = "..\\output\\tech_news.html"
 
 
 # ============================================================
 # RSSフィード取得
 # ============================================================
-def fetch_feed(feed_info):
+def fetch_feed(feed_info: dict) -> list[dict]:
+    """RSSフィードを取得して記事リストを返す
+
+    指定されたフィード情報からRSSを取得し、記事データのリストを返す。
+    取得に失敗した場合は空リストを返す。
+
+    Args:
+        feed_info (dict): フィード情報（name, url, colorを含む辞書）
+
+    Returns:
+        list[dict]: 記事データのリスト（title, link, summary, publishedを含む辞書）
+    """
     print(f"  取得中: {feed_info['name']} ...", end=" ", flush=True)
     try:
         parsed = feedparser.parse(feed_info["url"])
-        articles = []
+        articles: list[dict] = []
         for entry in parsed.entries[:MAX_ARTICLES_PER_FEED]:
-            title = entry.get("title", "（タイトルなし）")
-            link = entry.get("link", "#")
-            summary = entry.get("summary", entry.get("description", ""))
-            # HTMLタグを除去して要約を整形
-            import re
+            title:   str = entry.get("title", "（タイトルなし）")
+            link:    str = entry.get("link", "#")
+            summary: str = entry.get("summary", entry.get("description", ""))
             summary = re.sub(r"<[^>]+>", "", summary)
             summary = summary[:200] + "..." if len(summary) > 200 else summary
 
-            pub = entry.get("published_parsed") or entry.get("updated_parsed")
+            pub: tuple | None = entry.get("published_parsed") or entry.get("updated_parsed")
+            pub_str: str
             if pub:
-                pub_dt = datetime.datetime(*pub[:6])
+                pub_dt: datetime.datetime = datetime.datetime(*pub[:6])
                 pub_str = pub_dt.strftime("%Y-%m-%d %H:%M")
             else:
                 pub_str = "日時不明"
@@ -137,15 +159,24 @@ def fetch_feed(feed_info):
 # ============================================================
 # HTML生成
 # ============================================================
-def generate_html(feed_data):
-    now = datetime.datetime.now().strftime("%Y年%m月%d日 %H:%M")
-    total = sum(len(f["articles"]) for f in feed_data)
+def generate_html(feed_data: list[dict]) -> str:
+    """フィードデータからHTMLコンテンツを生成する
 
-    # サイドバーのナビゲーションリンク
-    nav_links = ""
+    取得したフィードデータを元に、サイドバーとカードグリッドを持つHTMLを生成する。
+
+    Args:
+        feed_data (list[dict]): フィードデータのリスト（name, color, articlesを含む辞書）
+
+    Returns:
+        str: 生成されたHTMLコンテンツ
+    """
+    now:   str = datetime.datetime.now().strftime("%Y年%m月%d日 %H:%M")
+    total: int = sum(len(f["articles"]) for f in feed_data)
+
+    nav_links: str = ""
     for f in feed_data:
-        anchor = f["name"].replace(" ", "_")
-        count = len(f["articles"])
+        anchor: str = f["name"].replace(" ", "_")
+        count:  int = len(f["articles"])
         nav_links += f"""
         <a href="#{anchor}" class="nav-link" style="--accent: {f['color']}">
           <span class="nav-dot" style="background:{f['color']}"></span>
@@ -153,10 +184,9 @@ def generate_html(feed_data):
           <span class="nav-count">{count}</span>
         </a>"""
 
-    # 各フィードのカード群
-    feed_sections = ""
+    feed_sections: str = ""
     for f in feed_data:
-        anchor = f["name"].replace(" ", "_")
+        anchor: str = f["name"].replace(" ", "_")
         if not f["articles"]:
             feed_sections += f"""
         <section class="feed-section" id="{anchor}">
@@ -169,7 +199,7 @@ def generate_html(feed_data):
         </section>"""
             continue
 
-        cards = ""
+        cards: str = ""
         for i, article in enumerate(f["articles"]):
             cards += f"""
           <article class="card" style="animation-delay:{i * 0.04}s">
@@ -192,7 +222,7 @@ def generate_html(feed_data):
           </div>
         </section>"""
 
-    html_content = f"""<!DOCTYPE html>
+    html_content: str = f"""<!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
@@ -419,14 +449,20 @@ def generate_html(feed_data):
 # ============================================================
 # メイン処理
 # ============================================================
-def main():
+def main() -> None:
+    """メイン処理
+
+    RSSフィードを取得してHTMLファイルを生成し、ブラウザで開く。
+
+    Raises:
+        SystemExit: feedparserがインストールされていない場合
+    """
     print("=" * 50)
     print("  Tech RSS Reader")
     print("=" * 50)
 
-    # feedparserの確認
     try:
-        import feedparser
+        import feedparser  # noqa: F401
     except ImportError:
         print("\n[エラー] feedparser がインストールされていません。")
         print("以下のコマンドを実行してインストールしてください:\n")
@@ -435,26 +471,27 @@ def main():
 
     print(f"\nフィードを取得中... ({len(FEEDS)}件のソース)\n")
 
-    feed_data = []
+    feed_data: list[dict] = []
     for feed_info in FEEDS:
-        articles = fetch_feed(feed_info)
-        feed_data.append({**feed_info, "articles": articles})
+        articles: list[dict] = fetch_feed(feed_info)
+        feed_data.append({
+            **feed_info,
+            "articles": articles,
+        })
 
     print(f"\nHTMLを生成中...")
-    html_content = generate_html(feed_data)
+    html_content: str = generate_html(feed_data)
 
-    output_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), OUTPUT_FILE)
+    output_path: str = os.path.join(os.path.dirname(os.path.abspath(__file__)), OUTPUT_FILE)
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html_content)
 
-    total = sum(len(f["articles"]) for f in feed_data)
+    total: int = sum(len(f["articles"]) for f in feed_data)
     print(f"\n✅ 完了！ {total}件の記事を取得しました。")
     print(f"📄 出力ファイル: {output_path}")
     print(f"\nブラウザで開いてください。")
 
-    # macOS / Linux / Windows で自動オープン
     try:
-        import subprocess, platform
         if platform.system() == "Darwin":
             subprocess.run(["open", output_path])
         elif platform.system() == "Windows":
