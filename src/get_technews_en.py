@@ -434,8 +434,8 @@ def main() -> None:
         f.write(html_content)
 
     total: int = sum(len(f["articles"]) for f in feed_data)
-    print(f"\n✅ 完了！ {total}件の記事を取得しました。")
-    print(f"📄 出力ファイル: {output_path}")
+    print(f"\n完了！ {total}件の記事を取得しました。")
+    print(f"出力ファイル: {output_path}")
     print(f"\nブラウザで開いてください。")
 
     try:
